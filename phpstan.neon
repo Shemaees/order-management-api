@@ -1,0 +1,17 @@
+includes:
+    - ./vendor/larastan/larastan/extension.neon
+
+parameters:
+    ignoreErrors:
+        -'#Unsafe usage of new static#'
+
+
+    paths:
+        - app
+
+    # The level 9 is the highest level
+    # levels docs: https://phpstan.org/user-guide/rule-levels
+    level: 5
+    excludePaths:
+        - ./vendor
+        - ./database/migrations

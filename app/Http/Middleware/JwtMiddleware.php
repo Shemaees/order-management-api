@@ -2,50 +2,40 @@
 
 namespace App\Http\Middleware;
 
-use App\Traits\ApiResponseTrait;
 use Closure;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Tymon\JWTAuth\Facades\JWTAuth;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class JwtMiddleware
 {
-    use ApiResponseTrait;
-
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param  Closure(Request): (Response)  $next
+     *
+     * @throws AuthenticationException
      */
     public function handle(Request $request, Closure $next): Response
     {
         try {
             $user = JWTAuth::parseToken()->authenticate();
-            if (!$user) {
-                return $this->errorResponse(
-                    'User not found',
-                    404,
-                );
+            if (! $user) {
+                throw new NotFoundHttpException('User not found');
             }
+
             return $next($request);
         } catch (TokenExpiredException $e) {
-            return $this->errorResponse(
-                'Token has expired',
-                401
-            );
+            throw new AuthenticationException('Token has expired');
         } catch (TokenInvalidException $e) {
-            return $this->errorResponse(
-                'Token is invalid',
-                401
-            );
+            throw new AuthenticationException('Token is invalid');
         } catch (JWTException $e) {
-            return $this->errorResponse(
-                'Token not provided',
-                401
-            );
+            throw new AuthenticationException('Token not provided');
         }
     }
 }

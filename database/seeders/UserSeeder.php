@@ -12,7 +12,7 @@ class UserSeeder extends Seeder
     use WithoutModelEvents;
 
     /**
-     * Seed the application's database.
+     * Seed the application's Database.
      */
     public function run(): void
     {

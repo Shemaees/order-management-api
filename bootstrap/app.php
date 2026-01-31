@@ -11,6 +11,7 @@ use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -35,7 +36,8 @@ return Application::configure(basePath: dirname(__DIR__))
 
             $map = [
                 ValidationException::class => 422,
-                AuthenticationException::class => 401,
+                AuthenticationException::class,
+                UnauthorizedHttpException::class => 401,
                 AuthorizationException::class => 403,
                 NotFoundHttpException::class => 404,
             ];

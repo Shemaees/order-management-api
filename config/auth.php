@@ -28,7 +28,7 @@ return [
     | which utilizes session storage plus the Eloquent user provider.
     |
     | All authentication guards have a user provider, which defines how the
-    | users are actually retrieved out of your database or other storage
+    | users are actually retrieved out of your Database or other storage
     | system used by the application. Typically, Eloquent is utilized.
     |
     | Supported: "session"
@@ -52,14 +52,14 @@ return [
     |--------------------------------------------------------------------------
     |
     | All authentication guards have a user provider, which defines how the
-    | users are actually retrieved out of your database or other storage
+    | users are actually retrieved out of your Database or other storage
     | system used by the application. Typically, Eloquent is utilized.
     |
     | If you have multiple user tables or models you may configure multiple
     | providers to represent the model / table. These providers may then
     | be assigned to any extra authentication guards you have defined.
     |
-    | Supported: "database", "eloquent"
+    | Supported: "Database", "eloquent"
     |
     */
 
@@ -70,7 +70,7 @@ return [
         ],
 
         // 'users' => [
-        //     'driver' => 'database',
+        //     'driver' => 'Database',
         //     'table' => 'users',
         // ],
     ],

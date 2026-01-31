@@ -5,7 +5,6 @@ namespace App\Providers;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Str;
 
 class ModuleRouteServiceProvider extends ServiceProvider
 {
@@ -29,8 +28,7 @@ class ModuleRouteServiceProvider extends ServiceProvider
             $apiRouteFile = $modulePath.'/Routes/api.php';
 
             if (file_exists($apiRouteFile)) {
-                $routeModuleName = Str::lower($moduleName);
-                Route::prefix("api/{$routeModuleName}")
+                Route::prefix('api/')
                     ->middleware(['api'])
                     ->group($apiRouteFile);
             }

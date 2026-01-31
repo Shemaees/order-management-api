@@ -6,7 +6,7 @@ use App\Base\BaseService;
 use App\Modules\Auth\DTOs\LoginDTO;
 use App\Modules\Auth\DTOs\RegisterDTO;
 use App\Modules\Auth\Http\Resources\UserResource;
-use App\Repository\UserRepository;
+use App\Modules\Auth\Repositories\UserRepository;
 use Illuminate\Support\Facades\Hash;
 
 class AuthService extends BaseService

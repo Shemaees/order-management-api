@@ -165,7 +165,7 @@ class AuthControllerTest extends TestCase
         $token = auth('api')->login($user);
 
         $response = $this->withHeader('Authorization', 'Bearer '.$token)
-            ->postJson('api/auth/me');
+            ->getJson('api/auth/me');
 
         $response->assertStatus(200)
             ->assertJson([

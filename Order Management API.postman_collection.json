@@ -1,0 +1,1778 @@
+{
+	"info": {
+		"_postman_id": "edded755-d730-4648-8a24-70ec55224646",
+		"name": "Order Management API",
+		"description": "Complete API collection for Order Management System with authentication, orders, and payments",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "7101876"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Register User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Response has status field\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('status');",
+									"});",
+									"",
+									"pm.test(\"Response has user data\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.have.property('user');",
+									"    pm.expect(jsonData.data).to.have.property('access');",
+									"});",
+									"",
+									"// Store token for future requests",
+									"if (pm.response.code === 201) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.collectionVariables.set(\"auth_token\", jsonData.data.access.token);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\",\n  \"password_confirmation\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/register",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						},
+						"description": "Create a new user account"
+					},
+					"response": [
+						{
+							"name": "Register User",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\",\n  \"password_confirmation\": \"password123\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/auth/register",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"register"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0 (Ubuntu)"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 31 Jan 2026 19:30:24 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": true,\n    \"message\": \"User registered successfully\",\n    \"data\": {\n        \"user\": {\n            \"id\": 7,\n            \"email\": \"john@example.com\",\n            \"name\": \"John Doe\",\n            \"created_at\": \"2026-01-31 19:30:23\"\n        },\n        \"access\": {\n            \"token\": false,\n            \"type\": \"Bearer\",\n            \"expired_at\": \"2026-01-31T20:30:24.042613Z\"\n        }\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has access token\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.have.property('access');",
+									"    pm.expect(jsonData.data.access).to.have.property('token');",
+									"});",
+									"",
+									"// Store token for future requests",
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.collectionVariables.set(\"auth_token\", jsonData.data.access.token);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						},
+						"description": "Authenticate user and receive JWT token"
+					},
+					"response": [
+						{
+							"name": "Login",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/auth/login",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0 (Ubuntu)"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 31 Jan 2026 19:30:30 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": true,\n    \"message\": \"User logged in successfully\",\n    \"data\": {\n        \"user\": {\n            \"id\": 7,\n            \"email\": \"john@example.com\",\n            \"name\": \"John Doe\",\n            \"created_at\": \"2026-01-31 19:30:23\"\n        },\n        \"access\": {\n            \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vb3JkZXItbWFuYWdlbWVudC1hcGkudGVzdC9hcGkvYXV0aC9sb2dpbiIsImlhdCI6MTc2OTg4NzgzMCwiZXhwIjoxNzY5ODkxNDMwLCJuYmYiOjE3Njk4ODc4MzAsImp0aSI6IldLRE5yMzc1anNIaXpNSmQiLCJzdWIiOiI3IiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.N29WVD_3KpJ575sjLq-kBZA2MBkSVwJMTNDzfndIRkw\",\n            \"type\": \"Bearer\",\n            \"expired_at\": \"2026-01-31T20:30:30.365230Z\"\n        }\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Get User Profile",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has user data\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.have.property('id');",
+									"    pm.expect(jsonData.data).to.have.property('email');",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/auth/me",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"me"
+							]
+						},
+						"description": "Get authenticated user information"
+					},
+					"response": [
+						{
+							"name": "Get User Profile",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/auth/me",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"me"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0 (Ubuntu)"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 31 Jan 2026 19:36:20 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": true,\n    \"message\": \"User Received Successfully.\",\n    \"data\": {\n        \"id\": 7,\n        \"email\": \"john@example.com\",\n        \"name\": \"John Doe\",\n        \"created_at\": \"2026-01-31 19:30:23\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Refresh Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has new access token\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.have.property('access');",
+									"    pm.expect(jsonData.data.access).to.have.property('token');",
+									"});",
+									"",
+									"// Update stored token",
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.collectionVariables.set(\"auth_token\", jsonData.data.access.token);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/auth/refresh",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"refresh"
+							]
+						},
+						"description": "Get a new JWT token"
+					},
+					"response": [
+						{
+							"name": "Refresh Token",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/auth/refresh",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"refresh"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0 (Ubuntu)"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 31 Jan 2026 19:36:27 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": true,\n    \"message\": \"Token refreshed successfully\",\n    \"data\": {\n        \"access\": {\n            \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vb3JkZXItbWFuYWdlbWVudC1hcGkudGVzdC9hcGkvYXV0aC9yZWZyZXNoIiwiaWF0IjoxNzY5ODg3ODMwLCJleHAiOjE3Njk4OTE3ODcsIm5iZiI6MTc2OTg4ODE4NywianRpIjoiQ3VLM09JNEpHS24yNE45MyIsInN1YiI6IjciLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.53ourJA-HuE-dcAgPnqo5HzJ_CrMRpUNPoy0TRq_0dk\",\n            \"type\": \"Bearer\",\n            \"expired_at\": \"2026-01-31T20:36:27.369727Z\"\n        }\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Logout",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Response has success status\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.status).to.be.true;",
+									"});",
+									"",
+									"// Clear stored token",
+									"if (pm.response.code === 201) {",
+									"    pm.collectionVariables.unset(\"auth_token\");",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/auth/logout",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"logout"
+							]
+						},
+						"description": "Invalidate current token"
+					},
+					"response": [
+						{
+							"name": "Logout",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/auth/logout",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"logout"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0 (Ubuntu)"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 31 Jan 2026 19:36:31 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": true,\n    \"message\": \"User logged out successfully\",\n    \"data\": null\n}"
+						}
+					]
+				}
+			],
+			"description": "Authentication endpoints for user management"
+		},
+		{
+			"name": "Orders",
+			"item": [
+				{
+					"name": "List Orders",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has paginated data\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.have.property('data');",
+									"    pm.expect(jsonData.data).to.have.property('links');",
+									"    pm.expect(jsonData.data).to.have.property('meta');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/orders?per_page=10&page=1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"orders"
+							],
+							"query": [
+								{
+									"key": "per_page",
+									"value": "10"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Get paginated list of user's orders with optional filters"
+					},
+					"response": [
+						{
+							"name": "List Orders",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/orders?per_page=10&page=1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"orders"
+									],
+									"query": [
+										{
+											"key": "per_page",
+											"value": "10"
+										},
+										{
+											"key": "page",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0 (Ubuntu)"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 31 Jan 2026 19:36:49 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": true,\n    \"message\": \"Success\",\n    \"data\": {\n        \"data\": [\n            {\n                \"id\": 1,\n                \"user\": {\n                    \"id\": 7,\n                    \"email\": \"john@example.com\",\n                    \"name\": \"John Doe\",\n                    \"created_at\": \"2026-01-31 19:30:23\"\n                },\n                \"items\": [\n                    {\n                        \"id\": 3,\n                        \"product\": {\n                            \"id\": 1,\n                            \"name\": \"voluptate\",\n                            \"description\": \"Sed est dolor ab omnis et fuga omnis voluptas.\",\n                            \"stock\": 53,\n                            \"status\": 0,\n                            \"image\": \"https://via.placeholder.com/640x480.png/008888?text=commodi\",\n                            \"created_at\": \"2026-01-31 19:31:10\"\n                        },\n                        \"quantity\": 2,\n                        \"price\": \"26.74\",\n                        \"discount\": null,\n                        \"total\": \"53.48\"\n                    },\n                    {\n                        \"id\": 4,\n                        \"product\": {\n                            \"id\": 2,\n                            \"name\": \"ullam\",\n                            \"description\": \"Exercitationem ut qui quidem animi.\",\n                            \"stock\": 63,\n                            \"status\": 0,\n                            \"image\": \"https://via.placeholder.com/640x480.png/00ff99?text=sed\",\n                            \"created_at\": \"2026-01-31 19:31:10\"\n                        },\n                        \"quantity\": 1,\n                        \"price\": \"16.24\",\n                        \"discount\": null,\n                        \"total\": \"16.24\"\n                    }\n                ],\n                \"notes\": \"Updated note for the order\",\n                \"billing_address\": \"123 Billing St\",\n                \"shipping_address\": \"456 Shipping Ave\",\n                \"status\": \"completed\",\n                \"created_at\": \"2026-01-31 19:31:15\",\n                \"updated_at\": \"2026-01-31 19:33:54\",\n                \"sub_total\": \"69.72\",\n                \"tax\": \"9.76\",\n                \"discount\": \"0.00\",\n                \"total\": \"79.48\"\n            }\n        ],\n        \"links\": {\n            \"first\": \"http://order-management-api.test/api/orders?page=1\",\n            \"last\": \"http://order-management-api.test/api/orders?page=1\",\n            \"prev\": null,\n            \"next\": null\n        },\n        \"meta\": {\n            \"current_page\": 1,\n            \"from\": 1,\n            \"last_page\": 1,\n            \"links\": [\n                {\n                    \"url\": null,\n                    \"label\": \"&laquo; Previous\",\n                    \"page\": null,\n                    \"active\": false\n                },\n                {\n                    \"url\": \"http://order-management-api.test/api/orders?page=1\",\n                    \"label\": \"1\",\n                    \"page\": 1,\n                    \"active\": true\n                },\n                {\n                    \"url\": null,\n                    \"label\": \"Next &raquo;\",\n                    \"page\": null,\n                    \"active\": false\n                }\n            ],\n            \"path\": \"http://order-management-api.test/api/orders\",\n            \"per_page\": 10,\n            \"to\": 1,\n            \"total\": 1\n        }\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Create Order",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has order data\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.have.property('id');",
+									"    pm.expect(jsonData.data).to.have.property('items');",
+									"});",
+									"",
+									"// Store order ID for other requests",
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.collectionVariables.set(\"order_id\", jsonData.data.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"items\": [\n    {\n      \"product_id\": 1,\n      \"quantity\": 2,\n      \"price\": 50.00,\n      \"discount\": 0.00\n    },\n    {\n      \"product_id\": 2,\n      \"quantity\": 1,\n      \"price\": 30.00,\n      \"discount\": 0.00\n    }\n  ],\n  \"billing_address\": \"123 Billing St\",\n  \"shipping_address\": \"456 Shipping Ave\",\n  \"notes\": \"Please handle with care\",\n  \"tax_percentage\": 10,\n  \"discount_percentage\": 5\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/orders",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"orders"
+							]
+						},
+						"description": "Create a new order with items"
+					},
+					"response": [
+						{
+							"name": "Create Order",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"items\": [\n    {\n      \"product_id\": 1,\n      \"quantity\": 2,\n      \"price\": 50.00,\n      \"discount\": 0.00\n    },\n    {\n      \"product_id\": 2,\n      \"quantity\": 1,\n      \"price\": 30.00,\n      \"discount\": 0.00\n    }\n  ],\n  \"billing_address\": \"123 Billing St\",\n  \"shipping_address\": \"456 Shipping Ave\",\n  \"notes\": \"Please handle with care\",\n  \"tax_percentage\": 10,\n  \"discount_percentage\": 5\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/orders",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"orders"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0 (Ubuntu)"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 31 Jan 2026 19:31:16 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": true,\n    \"message\": \"Success\",\n    \"data\": {\n        \"id\": 1,\n        \"user\": {\n            \"id\": 7,\n            \"email\": \"john@example.com\",\n            \"name\": \"John Doe\",\n            \"created_at\": \"2026-01-31 19:30:23\"\n        },\n        \"items\": [\n            {\n                \"id\": 1,\n                \"product\": {\n                    \"id\": 1,\n                    \"name\": \"voluptate\",\n                    \"description\": \"Sed est dolor ab omnis et fuga omnis voluptas.\",\n                    \"stock\": 53,\n                    \"status\": 0,\n                    \"image\": \"https://via.placeholder.com/640x480.png/008888?text=commodi\",\n                    \"created_at\": \"2026-01-31 19:31:10\"\n                },\n                \"quantity\": 2,\n                \"price\": \"26.74\",\n                \"discount\": null,\n                \"total\": \"53.48\"\n            },\n            {\n                \"id\": 2,\n                \"product\": {\n                    \"id\": 2,\n                    \"name\": \"ullam\",\n                    \"description\": \"Exercitationem ut qui quidem animi.\",\n                    \"stock\": 63,\n                    \"status\": 0,\n                    \"image\": \"https://via.placeholder.com/640x480.png/00ff99?text=sed\",\n                    \"created_at\": \"2026-01-31 19:31:10\"\n                },\n                \"quantity\": 1,\n                \"price\": \"16.24\",\n                \"discount\": null,\n                \"total\": \"16.24\"\n            }\n        ],\n        \"notes\": \"Please handle with care\",\n        \"billing_address\": \"123 Billing St\",\n        \"shipping_address\": \"456 Shipping Ave\",\n        \"status\": \"pending\",\n        \"created_at\": \"2026-01-31 19:31:15\",\n        \"updated_at\": \"2026-01-31 19:31:15\",\n        \"sub_total\": 69.72,\n        \"tax\": 9.760800000000001,\n        \"discount\": 0,\n        \"total\": 79.4808\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Order Details",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has order details\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.have.property('id');",
+									"    pm.expect(jsonData.data).to.have.property('items');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/orders/{{order_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"orders",
+								"{{order_id}}"
+							]
+						},
+						"description": "Get specific order details"
+					},
+					"response": [
+						{
+							"name": "Get Order Details",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/orders/{{order_id}}",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"orders",
+										"{{order_id}}"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0 (Ubuntu)"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 31 Jan 2026 19:35:56 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": true,\n    \"message\": \"Success\",\n    \"data\": {\n        \"id\": 1,\n        \"user\": {\n            \"id\": 7,\n            \"email\": \"john@example.com\",\n            \"name\": \"John Doe\",\n            \"created_at\": \"2026-01-31 19:30:23\"\n        },\n        \"items\": [\n            {\n                \"id\": 3,\n                \"product\": {\n                    \"id\": 1,\n                    \"name\": \"voluptate\",\n                    \"description\": \"Sed est dolor ab omnis et fuga omnis voluptas.\",\n                    \"stock\": 53,\n                    \"status\": 0,\n                    \"image\": \"https://via.placeholder.com/640x480.png/008888?text=commodi\",\n                    \"created_at\": \"2026-01-31 19:31:10\"\n                },\n                \"quantity\": 2,\n                \"price\": \"26.74\",\n                \"discount\": null,\n                \"total\": \"53.48\"\n            },\n            {\n                \"id\": 4,\n                \"product\": {\n                    \"id\": 2,\n                    \"name\": \"ullam\",\n                    \"description\": \"Exercitationem ut qui quidem animi.\",\n                    \"stock\": 63,\n                    \"status\": 0,\n                    \"image\": \"https://via.placeholder.com/640x480.png/00ff99?text=sed\",\n                    \"created_at\": \"2026-01-31 19:31:10\"\n                },\n                \"quantity\": 1,\n                \"price\": \"16.24\",\n                \"discount\": null,\n                \"total\": \"16.24\"\n            }\n        ],\n        \"notes\": \"Updated note for the order\",\n        \"billing_address\": \"123 Billing St\",\n        \"shipping_address\": \"456 Shipping Ave\",\n        \"status\": \"completed\",\n        \"created_at\": \"2026-01-31 19:31:15\",\n        \"updated_at\": \"2026-01-31 19:33:54\",\n        \"sub_total\": \"69.72\",\n        \"tax\": \"9.76\",\n        \"discount\": \"0.00\",\n        \"total\": \"79.48\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Update Order",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has updated order\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.have.property('id');",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n      \"items\": [\n    {\n      \"product_id\": 1,\n      \"quantity\": 2,\n      \"price\": 50.00,\n      \"discount\": 0.00\n    },\n    {\n      \"product_id\": 2,\n      \"quantity\": 1,\n      \"price\": 30.00,\n      \"discount\": 0.00\n    }\n  ],\n  \"billing_address\": \"123 Billing St\",\n  \"shipping_address\": \"456 Shipping Ave\",\n  \"tax_percentage\": 10,\n  \"discount_percentage\": 5,\n  \"notes\": \"Updated note for the order\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/orders/{{order_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"orders",
+								"{{order_id}}"
+							]
+						},
+						"description": "Update existing order"
+					},
+					"response": [
+						{
+							"name": "Update Order",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n      \"items\": [\n    {\n      \"product_id\": 1,\n      \"quantity\": 2,\n      \"price\": 50.00,\n      \"discount\": 0.00\n    },\n    {\n      \"product_id\": 2,\n      \"quantity\": 1,\n      \"price\": 30.00,\n      \"discount\": 0.00\n    }\n  ],\n  \"billing_address\": \"123 Billing St\",\n  \"shipping_address\": \"456 Shipping Ave\",\n  \"tax_percentage\": 10,\n  \"discount_percentage\": 5,\n  \"notes\": \"Updated note for the order\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/orders/{{order_id}}",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"orders",
+										"{{order_id}}"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0 (Ubuntu)"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 31 Jan 2026 19:33:35 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": true,\n    \"message\": \"Success\",\n    \"data\": {\n        \"id\": 1,\n        \"user\": {\n            \"id\": 7,\n            \"email\": \"john@example.com\",\n            \"name\": \"John Doe\",\n            \"created_at\": \"2026-01-31 19:30:23\"\n        },\n        \"items\": [\n            {\n                \"id\": 3,\n                \"product\": {\n                    \"id\": 1,\n                    \"name\": \"voluptate\",\n                    \"description\": \"Sed est dolor ab omnis et fuga omnis voluptas.\",\n                    \"stock\": 53,\n                    \"status\": 0,\n                    \"image\": \"https://via.placeholder.com/640x480.png/008888?text=commodi\",\n                    \"created_at\": \"2026-01-31 19:31:10\"\n                },\n                \"quantity\": 2,\n                \"price\": \"26.74\",\n                \"discount\": null,\n                \"total\": \"53.48\"\n            },\n            {\n                \"id\": 4,\n                \"product\": {\n                    \"id\": 2,\n                    \"name\": \"ullam\",\n                    \"description\": \"Exercitationem ut qui quidem animi.\",\n                    \"stock\": 63,\n                    \"status\": 0,\n                    \"image\": \"https://via.placeholder.com/640x480.png/00ff99?text=sed\",\n                    \"created_at\": \"2026-01-31 19:31:10\"\n                },\n                \"quantity\": 1,\n                \"price\": \"16.24\",\n                \"discount\": null,\n                \"total\": \"16.24\"\n            }\n        ],\n        \"notes\": \"Updated note for the order\",\n        \"billing_address\": \"123 Billing St\",\n        \"shipping_address\": \"456 Shipping Ave\",\n        \"status\": \"pending\",\n        \"created_at\": \"2026-01-31 19:31:15\",\n        \"updated_at\": \"2026-01-31 19:33:35\",\n        \"sub_total\": \"69.72\",\n        \"tax\": \"9.76\",\n        \"discount\": \"0.00\",\n        \"total\": \"79.48\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Update Order Status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has updated status\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.have.property('status');",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"status\": \"completed\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/orders/{{order_id}}/status",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"orders",
+								"{{order_id}}",
+								"status"
+							]
+						},
+						"description": "Update order status"
+					},
+					"response": [
+						{
+							"name": "Update Order Status",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"status\": \"completed\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/orders/{{order_id}}/status",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"orders",
+										"{{order_id}}",
+										"status"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0 (Ubuntu)"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 31 Jan 2026 19:33:54 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": true,\n    \"message\": \"Success\",\n    \"data\": \"Order status updated successfully\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete Order",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has success message\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.status).to.be.true;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/orders/{{order_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"orders",
+								"{{order_id}}"
+							]
+						},
+						"description": "Delete an order (only if no payments exist)"
+					},
+					"response": []
+				}
+			],
+			"description": "Order management endpoints"
+		},
+		{
+			"name": "Payments",
+			"item": [
+				{
+					"name": "Process Payment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has payment data\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.have.property('id');",
+									"    pm.expect(jsonData.data).to.have.property('payment_status');",
+									"});",
+									"",
+									"// Store payment ID for other requests",
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.collectionVariables.set(\"payment_id\", jsonData.data.id);",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"payment_method\": \"credit_card\",\n  \"card_number\": \"4242424242424242\",\n  \"card_expiry\": \"12/25\",\n  \"card_cvv\": \"123\",\n  \"card_holder_name\": \"John Doe\",\n  \"amount\":  79.48\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/orders/{{order_id}}/payment",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"orders",
+								"{{order_id}}",
+								"payment"
+							]
+						},
+						"description": "Process a payment for an order"
+					},
+					"response": [
+						{
+							"name": "Process Payment",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"payment_method\": \"credit_card\",\n  \"card_number\": \"4242424242424242\",\n  \"card_expiry\": \"12/25\",\n  \"card_cvv\": \"123\",\n  \"card_holder_name\": \"John Doe\",\n  \"amount\":  79.48\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/orders/{{order_id}}/payment",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"orders",
+										"{{order_id}}",
+										"payment"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0 (Ubuntu)"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 31 Jan 2026 19:35:02 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": true,\n    \"message\": \"Payment processed successfully\",\n    \"data\": {\n        \"id\": 1,\n        \"order_id\": 1,\n        \"payment_id\": \"CC_WXA95OV9KWWNGX0S\",\n        \"payment_method\": \"credit_card\",\n        \"payment_status\": \"completed\",\n        \"amount\": \"79.48\",\n        \"currency\": \"USD\",\n        \"transaction_details\": {\n            \"gateway\": \"credit_card\",\n            \"message\": \"Payment processed successfully\",\n            \"card_last_four\": \"****4795\",\n            \"reference_number\": \"REF_TIIFUZSKMVZJ\",\n            \"processed_at\": \"2026-01-31T19:35:02+00:00\"\n        },\n        \"paid_at\": \"2026-01-31 19:35:02\",\n        \"created_at\": \"2026-01-31 19:35:02\",\n        \"updated_at\": \"2026-01-31 19:35:02\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Payment Details",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has payment details\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.have.property('id');",
+									"    pm.expect(jsonData.data).to.have.property('payment_status');",
+									"    pm.expect(jsonData.data).to.have.property('transaction_details');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/payments/{{payment_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"payments",
+								"{{payment_id}}"
+							]
+						},
+						"description": "Get specific payment details"
+					},
+					"response": [
+						{
+							"name": "Get Payment Details",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/payments/{{payment_id}}",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"payments",
+										"{{payment_id}}"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0 (Ubuntu)"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 31 Jan 2026 19:35:23 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": true,\n    \"message\": \"Payment retrieved successfully\",\n    \"data\": {\n        \"id\": 1,\n        \"order_id\": 1,\n        \"payment_id\": \"CC_WXA95OV9KWWNGX0S\",\n        \"payment_method\": \"credit_card\",\n        \"payment_status\": \"completed\",\n        \"amount\": \"79.48\",\n        \"currency\": \"USD\",\n        \"transaction_details\": {\n            \"gateway\": \"credit_card\",\n            \"message\": \"Payment processed successfully\",\n            \"card_last_four\": \"****4795\",\n            \"reference_number\": \"REF_TIIFUZSKMVZJ\",\n            \"processed_at\": \"2026-01-31T19:35:02+00:00\"\n        },\n        \"paid_at\": \"2026-01-31 19:35:02\",\n        \"created_at\": \"2026-01-31 19:35:02\",\n        \"updated_at\": \"2026-01-31 19:35:02\",\n        \"order\": {\n            \"id\": 1,\n            \"items\": [\n                {\n                    \"id\": 3,\n                    \"quantity\": 2,\n                    \"price\": \"26.74\",\n                    \"discount\": null,\n                    \"total\": \"53.48\"\n                },\n                {\n                    \"id\": 4,\n                    \"quantity\": 1,\n                    \"price\": \"16.24\",\n                    \"discount\": null,\n                    \"total\": \"16.24\"\n                }\n            ],\n            \"notes\": \"Updated note for the order\",\n            \"billing_address\": \"123 Billing St\",\n            \"shipping_address\": \"456 Shipping Ave\",\n            \"status\": \"completed\",\n            \"created_at\": \"2026-01-31 19:31:15\",\n            \"updated_at\": \"2026-01-31 19:33:54\",\n            \"sub_total\": \"69.72\",\n            \"tax\": \"9.76\",\n            \"discount\": \"0.00\",\n            \"total\": \"79.48\"\n        }\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Order Payments",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has payments array\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.be.an('array');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/payments/order/{{order_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"payments",
+								"order",
+								"{{order_id}}"
+							]
+						},
+						"description": "Get all payments for a specific order"
+					},
+					"response": [
+						{
+							"name": "Get Order Payments",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/payments/order/{{order_id}}",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"payments",
+										"order",
+										"{{order_id}}"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0 (Ubuntu)"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 31 Jan 2026 19:35:31 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": true,\n    \"message\": \"Order payments retrieved successfully\",\n    \"data\": {\n        \"data\": [\n            {\n                \"id\": 1,\n                \"order_id\": 1,\n                \"payment_id\": \"CC_WXA95OV9KWWNGX0S\",\n                \"payment_method\": \"credit_card\",\n                \"payment_status\": \"completed\",\n                \"amount\": \"79.48\",\n                \"currency\": \"USD\",\n                \"transaction_details\": {\n                    \"gateway\": \"credit_card\",\n                    \"message\": \"Payment processed successfully\",\n                    \"card_last_four\": \"****4795\",\n                    \"reference_number\": \"REF_TIIFUZSKMVZJ\",\n                    \"processed_at\": \"2026-01-31T19:35:02+00:00\"\n                },\n                \"paid_at\": \"2026-01-31 19:35:02\",\n                \"created_at\": \"2026-01-31 19:35:02\",\n                \"updated_at\": \"2026-01-31 19:35:02\"\n            }\n        ]\n    }\n}"
+						}
+					]
+				}
+			],
+			"description": "Payment processing endpoints"
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Global pre-request script",
+					"// Set default base URL if not already set",
+					"if (!pm.collectionVariables.get(\"base_url\")) {",
+					"    pm.collectionVariables.set(\"base_url\", \"http://order-management-api.test/api\");",
+					"}"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Global test script",
+					"pm.test(\"Response has correct structure\", function () {",
+					"    var jsonData = pm.response.json();",
+					"    pm.expect(jsonData).to.have.property('status');",
+					"    pm.expect(jsonData).to.have.property('message');",
+					"});"
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://order-management-api.test/api",
+			"type": "string"
+		},
+		{
+			"key": "order_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "payment_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "auth_token",
+			"value": ""
+		}
+	]
+}

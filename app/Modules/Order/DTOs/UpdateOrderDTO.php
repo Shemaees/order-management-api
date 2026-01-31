@@ -4,7 +4,6 @@ namespace App\Modules\Order\DTOs;
 
 use App\Base\BaseOrderDTO;
 use App\Modules\Order\Models\Order;
-use App\Modules\Order\Models\Product;
 use Illuminate\Http\Request;
 
 class UpdateOrderDTO extends BaseOrderDTO

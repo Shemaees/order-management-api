@@ -17,14 +17,13 @@ class OrderService extends BaseService
     public function __construct(public OrderRepository $orderRepository) {}
 
     /**
-     * @param OrderFilterDTO $orderFilterDTO
      * @return LengthAwarePaginator|void
+     *
      * @throws \Throwable
      */
     public function listOrders(
         OrderFilterDTO $orderFilterDTO,
-    )
-    {
+    ) {
         try {
             return $this->orderRepository->getAllOrders(
                 $orderFilterDTO
@@ -35,8 +34,8 @@ class OrderService extends BaseService
     }
 
     /**
-     * @param CreateOrderDTO $DTO
      * @return Order|void
+     *
      * @throws \Throwable
      */
     public function createOrder(CreateOrderDTO $DTO)
@@ -61,8 +60,8 @@ class OrderService extends BaseService
     }
 
     /**
-     * @param UpdateOrderDTO $DTO
      * @return Order|void
+     *
      * @throws \Throwable
      */
     public function updateOrder(UpdateOrderDTO $DTO)
@@ -85,9 +84,8 @@ class OrderService extends BaseService
     }
 
     /**
-     * @param Order $order
-     * @param string $status
      * @return bool|void
+     *
      * @throws \Throwable
      */
     public function updateOrderStatus(Order $order, string $status)

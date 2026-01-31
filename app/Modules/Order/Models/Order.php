@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * @property mixed $status
  * @property mixed $id
+ * @property mixed $user_id
  */
 class Order extends Model
 {
@@ -27,6 +28,7 @@ class Order extends Model
     {
         return OrderFactory::new();
     }
+
     protected $fillable = [
         'user_id',
         'status',

@@ -15,6 +15,7 @@ class OrderControllerTest extends TestCase
     use RefreshDatabase;
 
     private User $user;
+
     private string $token;
 
     protected function setUp(): void
@@ -70,7 +71,7 @@ class OrderControllerTest extends TestCase
                     'links',
                     'meta' => [
                         'per_page',
-                        'to'
+                        'to',
                     ],
                 ],
             ]);
@@ -121,7 +122,7 @@ class OrderControllerTest extends TestCase
 
         $response = $this->withHeaders([
             'Authorization' => "Bearer {$this->token}",
-        ])->getJson('/api/orders?from_date=' . now()->subDays(7)->toDateString() . '&to_date=' . now()->toDateString());
+        ])->getJson('/api/orders?from_date='.now()->subDays(7)->toDateString().'&to_date='.now()->toDateString());
 
         $response->assertStatus(200);
         $this->assertCount(2, $response->json('data.data'));
@@ -344,25 +345,25 @@ class OrderControllerTest extends TestCase
     /**
      * Test user can delete their order
      */
-//    public function test_user_can_delete_their_order(): void
-//    {
-//        $order = Order::factory()
-//            ->for($this->user)
-//            ->create();
-//
-//        $response = $this->withHeaders([
-//            'Authorization' => "Bearer {$this->token}",
-//        ])->deleteJson("/api/orders/{$order->id}");
-//
-//        $response->assertStatus(200)
-//            ->assertJson([
-//                'status' => true,
-//            ]);
-//
-//        $this->assertDatabaseMissing('orders', [
-//            'id' => $order->id,
-//        ]);
-//    }
+    //    public function test_user_can_delete_their_order(): void
+    //    {
+    //        $order = Order::factory()
+    //            ->for($this->user)
+    //            ->create();
+    //
+    //        $response = $this->withHeaders([
+    //            'Authorization' => "Bearer {$this->token}",
+    //        ])->deleteJson("/api/orders/{$order->id}");
+    //
+    //        $response->assertStatus(200)
+    //            ->assertJson([
+    //                'status' => true,
+    //            ]);
+    //
+    //        $this->assertDatabaseMissing('orders', [
+    //            'id' => $order->id,
+    //        ]);
+    //    }
 
     /**
      * Test user can update order status

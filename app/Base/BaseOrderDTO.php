@@ -3,6 +3,7 @@
 namespace App\Base;
 
 use App\Modules\Order\DTOs\OrderItemDTO;
+use App\Modules\Order\Models\Product;
 
 abstract class BaseOrderDTO extends BaseDTO
 {
@@ -30,5 +31,17 @@ abstract class BaseOrderDTO extends BaseDTO
     public function calculateTotal(): ?float
     {
         return $this->calculateSubTotal() + $this->calculateTax() - $this->calculateDiscount();
+    }
+
+    public static function itemsFormatting(array $items): array
+    {
+        return collect($items)->map(callback: function ($item) {
+            $product = Product::find($item['product_id']);
+            $item['price'] = $product->price;
+            $item['discount'] = $product->discount;
+            $item['total'] = $item['quantity'] * ($product->price - $product->discount);
+
+            return OrderItemDTO::fromRequest($item);
+        })->toArray();
     }
 }

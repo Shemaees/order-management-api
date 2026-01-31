@@ -16,6 +16,7 @@ class OrderItem extends Model
     {
         return OrderItemFactory::new();
     }
+
     protected $fillable = [
         'order_id',
         'product_id',

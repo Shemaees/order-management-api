@@ -7,6 +7,7 @@ use App\Modules\Order\DTOs\OrderFilterDTO;
 use App\Modules\Order\DTOs\OrderItemDTO;
 use App\Modules\Order\Enums\OrderStatusEnum;
 use App\Modules\Order\Models\Order;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
 class OrderRepository extends BaseRepository
@@ -51,6 +52,7 @@ class OrderRepository extends BaseRepository
     public function createWithItems(array $orderData, array $itemData): Order
     {
         return DB::transaction(function () use ($orderData, $itemData) {
+            /** @var Order $order */
             $order = $this->create($orderData);
             if (! empty($itemData)) {
                 $order->items()->createMany(
@@ -67,7 +69,7 @@ class OrderRepository extends BaseRepository
     /**
      * @throws \Throwable
      */
-    public function updateWithItems(Order $order, array $orderNewData, array $itemNewData): mixed
+    public function updateWithItems(Order $order, array $orderNewData, ?array $itemNewData): Order
     {
         return DB::transaction(function () use ($order, $orderNewData, $itemNewData) {
             $order->update($orderNewData);
@@ -91,7 +93,7 @@ class OrderRepository extends BaseRepository
         return $order->update(['status' => $status]);
     }
 
-    public function findWithRelations(int $id): Order
+    public function findWithRelations(int $id): ?Model
     {
         return $this->model::where('id', $id)->with($this->allRelations)->first();
     }

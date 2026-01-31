@@ -14,6 +14,7 @@ use Random\RandomException;
 class OrderFactory extends Factory
 {
     protected $model = Order::class;
+
     /**
      * Define the model's default state.
      *
@@ -38,13 +39,11 @@ class OrderFactory extends Factory
             'billing_address' => [
                 'address' => $this->faker->address(),
                 'city' => $this->faker->city(),
-                'state' => $this->faker->state(),
                 'zip' => $this->faker->postcode(),
             ],
             'shipping_address' => [
                 'address' => $this->faker->address(),
                 'city' => $this->faker->city(),
-                'state' => $this->faker->state(),
                 'zip' => $this->faker->postcode(),
             ],
             'payment_method' => 'cash',

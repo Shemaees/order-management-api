@@ -11,6 +11,17 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ *
+ * @property int $id
+ * @property float $price
+ * @property float $discount
+ * @property int $stock
+ * @property string $image
+ * @property ProductStatusEnum $status
+ * @property float $total
+ * @property string $name
+ */
 class Product extends Model
 {
     /** @use HasFactory<ProductFactory> */

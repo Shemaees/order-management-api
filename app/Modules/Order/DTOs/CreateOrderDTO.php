@@ -24,17 +24,9 @@ class CreateOrderDTO extends BaseOrderDTO
      */
     public static function fromRequest(array $request): static
     {
-        $items = collect($request['items'])->map(function ($item) {
-            $product = Product::find($item['product_id']);
-            $item['price'] = $product->price;
-            $item['discount'] = $product->discount;
-            $item['total'] = $item['quantity'] * ($product->price - $product->discount);
-            return OrderItemDTO::fromRequest($item);
-        })->toArray();
-
         return new static(
             user_id: auth('api')->id(),
-            items: $items,
+            items: self::itemsFormatting($request['items']),
             notes: $request['notes'] ?? null,
             billing_address: $request['billing_address'] ?? null,
             shipping_address: $request['shipping_address'] ?? null,

@@ -24,7 +24,7 @@ class OrderItemDTO extends BaseDTO
             $product = Product::find($this->product_id);
 
             throw new Exception(
-                'Product ' . $product->name . ' stock is not enough'
+                'Product '.$product->name.' stock is not enough'
             );
         }
     }

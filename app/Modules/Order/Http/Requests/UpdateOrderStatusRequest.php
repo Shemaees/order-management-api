@@ -28,7 +28,7 @@ class UpdateOrderStatusRequest extends FormRequest
             'status' => [
                 'required',
                 'string',
-                'in:' . implode(',', OrderStatusEnum::values()),
+                'in:'.implode(',', OrderStatusEnum::values()),
             ],
         ];
     }

@@ -5,6 +5,7 @@ namespace App\Modules\Order\Models;
 use App\Models\User;
 use App\Modules\Order\Database\Factories\OrderFactory;
 use App\Modules\Order\Enums\OrderStatusEnum;
+use App\Modules\Payment\Models\Payment;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -18,6 +19,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property mixed $status
  * @property mixed $id
  * @property mixed $user_id
+ * @property float $total
  */
 class Order extends Model
 {
@@ -113,5 +115,10 @@ class Order extends Model
     protected function forUser(Builder $query, int $userId): Builder
     {
         return $query->where('user_id', $userId);
+    }
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class);
     }
 }
